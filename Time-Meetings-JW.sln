@@ -5,6 +5,11 @@ VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Time-Meetings-JW", "Time-Meetings-JW\Time-Meetings-JW.csproj", "{A90DEAA7-04BA-4418-95C1-870FE1B453DE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{380A7511-A354-6D7A-0CC0-8FA1F1BA7B6C}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +18,7 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A90DEAA7-04BA-4418-95C1-870FE1B453DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A90DEAA7-04BA-4418-95C1-870FE1B453DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A90DEAA7-04BA-4418-95C1-870FE1B453DE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{A90DEAA7-04BA-4418-95C1-870FE1B453DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A90DEAA7-04BA-4418-95C1-870FE1B453DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
