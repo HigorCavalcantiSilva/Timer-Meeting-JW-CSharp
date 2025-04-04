@@ -54,13 +54,13 @@ namespace Time_Meetings_JW
 
                 if (currentTimer == null)
                     currentTimer = new Services.Timer(part);
-                
+
                 if (part.Status == EStatus.Started)
                 {
                     SetDisableOthersParts(index);
                     currentTimer.StartTimer();
                 }
-                else if (part.Status == EStatus.Finished || part.Status == EStatus.Delayed)
+                else if (currentTimer != null && part.Status == EStatus.Finished || part.Status == EStatus.Delayed)
                 {
                     currentTimer.StopTimer();
                     currentTimer = null;
