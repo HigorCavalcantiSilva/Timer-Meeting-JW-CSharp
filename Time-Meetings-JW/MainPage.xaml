@@ -15,7 +15,10 @@
             <CollectionView ItemsSource="{Binding Parts}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding Name}" FontSize="20" Padding="10"/>
+                        <StackLayout Orientation="Horizontal" Padding="10">
+                            <Label Text="{Binding Name}" FontSize="15" Padding="10" TextColor="{Binding Color}" />
+                            <Button Text="Iniciar" />
+                        </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
