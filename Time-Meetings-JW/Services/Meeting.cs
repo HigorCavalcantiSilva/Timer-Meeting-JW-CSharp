@@ -1,7 +1,8 @@
 ﻿using HtmlAgilityPack;
 using System.Collections.ObjectModel;
+using Time_Meetings_JW.Entities;
 
-namespace Time_Meetings_JW
+namespace Time_Meetings_JW.Services
 {
     public class Meeting
     {
@@ -87,12 +88,14 @@ namespace Time_Meetings_JW
 
         private void SetPart(int number, string name, int time, Colors? color)
         {
+            time = time * 60;
             Parts.Add(new Part
             {
                 Name = name,
                 Time = time,
+                TimeUsedDesc = time,
                 Number = number,
-                Color = $"#{color:X6}"
+                Color = $"#{(int)(color ?? Colors.Zero):X6}"
             });
         }
 

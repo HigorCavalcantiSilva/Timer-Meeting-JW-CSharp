@@ -16,8 +16,29 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Horizontal" Padding="10">
-                            <Label Text="{Binding Name}" FontSize="15" Padding="10" TextColor="{Binding Color}" />
-                            <Button Text="Iniciar" />
+                            <Label 
+                                Text="{Binding Name}"
+                                FontSize="15"
+                                Padding="10"
+                                TextColor="{Binding ColorText}"
+                                HorizontalOptions="FillAndExpand"
+                                BackgroundColor="{Binding BackgroundTitleParts}"
+                                FontAttributes="{Binding FontWeight}" />
+                            
+                            <Button 
+                                Text="{Binding FormattedTimeUsed}" 
+                                IsVisible="True"
+                                BackgroundColor="{Binding ColorButton}"
+                                Clicked="ToggleTimerClicked"
+                                CommandParameter="{Binding Number}"
+                                IsEnabled="{Binding Enabled}"
+                                >
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button" Binding="{Binding Time}" Value="0">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
