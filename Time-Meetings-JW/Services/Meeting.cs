@@ -9,8 +9,9 @@ namespace Time_Meetings_JW.Services
         private ObservableCollection<Part> Parts = new();
         private string link_master = "https://wol.jw.org";
         private int actual_part = 1;
+        private string actual_week = "";
         private enum Colors {
-            Zero = 0x000000,
+            Zero = 0xFFFFFF,
             First = 0x3C7F8B,
             Second = 0xD68F00,
             Third = 0x942926
@@ -21,6 +22,23 @@ namespace Time_Meetings_JW.Services
             string link = await GetLinkActualMeeting();
             HtmlDocument doc = await GetHtmlMeeting(link);
             SetSectionsAtMeeting(doc);
+            SetActualWeek(doc);
+        }
+
+        public void GetContentMeetingWeekend()
+        {
+            SetPart(-1, "Discurso Público", 30, Colors.Zero);
+            SetPart(99, "Estudo de A Sentinela", 60, Colors.Zero);
+        }
+
+        public void SetActualWeek(HtmlDocument doc)
+        {
+            actual_week = doc.DocumentNode.SelectSingleNode("//*[@id='p1']").InnerText;
+        }
+
+        public string GetWeek()
+        {
+            return actual_week;
         }
 
         private async Task<string> GetLinkActualMeeting()

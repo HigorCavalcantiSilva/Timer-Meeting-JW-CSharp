@@ -8,8 +8,12 @@
     Title="Time_Meetings_JW">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Reunião de Meio de Semana"
+        ContentTemplate="{DataTemplate local:MidweekPage}"
+        Route="MidweekPage" />
+    <ShellContent
+        Title="Reunião de Fim de Semana"
+        ContentTemplate="{DataTemplate local:WeekendPage}"
+        Route="WeekendPage" />
 
 </Shell>
