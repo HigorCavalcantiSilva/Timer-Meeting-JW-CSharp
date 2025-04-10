@@ -74,6 +74,8 @@ namespace Time_Meetings_JW.Entities
                 EStatus.Started => Colors.Green.ToHex(),
                 EStatus.Finished => Colors.Blue.ToHex(),
                 EStatus.Delayed => Colors.Red.ToHex(),
+                EStatus.OutTime => Colors.DarkRed.ToHex(),
+                EStatus.Ending => Colors.Orange.ToHex(),
                 _ => Colors.Gray.ToHex()
             };
         public string? FormattedTimeUsed =>

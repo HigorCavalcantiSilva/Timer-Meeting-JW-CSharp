@@ -5,6 +5,8 @@
         NotStarted,
         Started,
         Finished,
-        Delayed
+        Delayed,
+        OutTime,
+        Ending
     }
 }

@@ -1,8 +1,11 @@
-﻿using Time_Meetings_JW.Entities;
+﻿using System.Collections.ObjectModel;
+using Time_Meetings_JW.Entities;
+using Time_Meetings_JW.Enums;
+using Time_Meetings_JW.Utils;
 
 namespace Time_Meetings_JW.Services
 {
-    class Timer
+    public class Timer
     {
         private IDispatcherTimer timer;
         private Part currentPart;
@@ -12,7 +15,7 @@ namespace Time_Meetings_JW.Services
             currentPart = part;
         }
 
-        public void StartTimer()
+        public void StartTimer(ObservableCollection<Part> Parts)
         {
             timer = Application.Current.Dispatcher.CreateTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
@@ -22,6 +25,14 @@ namespace Time_Meetings_JW.Services
                 {
                     currentPart.TimeUsed++;
                     currentPart.TimeUsedDesc--;
+
+                    if (currentPart.TimeUsedDesc < 0)
+                        currentPart.Status = EStatus.OutTime;
+
+                    if (currentPart.TimeUsedDesc <= 30 && currentPart.TimeUsedDesc >= 0)
+                        currentPart.Status = EStatus.Ending;
+
+                    ManageParts.SaveParts(Parts);
                 }
             };
             timer.Start();

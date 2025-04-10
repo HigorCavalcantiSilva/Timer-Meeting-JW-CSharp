@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Time_Meetings_JW.ConfigurationsPage">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15" VerticalOptions="Center">
+
+            <Button Text="Limpar Dados - Reunião Meio de Semana"
+                Clicked="DeleteInfosClicked"
+                CommandParameter="1"
+                BackgroundColor="CornflowerBlue"
+                TextColor="White" />
+
+            <Button Text="Limpar Dados - Reunião Fim de Semana"
+                Clicked="DeleteInfosClicked"
+                CommandParameter="2"
+                BackgroundColor="DarkOrange"
+                TextColor="White" />
+
+            <Button Text="LIMPAR TUDO"
+                Clicked="DeleteInfosClicked"
+                CommandParameter="3"
+                BackgroundColor="DarkRed"
+                TextColor="White" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -68,6 +68,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="ConfigurationsPage.xaml.cs">
+	    <DependentUpon>ConfigurationsPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="WeekendPage.xaml.cs">
 	    <DependentUpon>WeekendPage.xaml</DependentUpon>
 	  </Compile>
@@ -77,6 +80,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="ConfigurationsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="WeekendPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

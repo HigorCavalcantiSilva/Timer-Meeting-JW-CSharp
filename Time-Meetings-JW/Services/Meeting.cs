@@ -17,7 +17,7 @@ namespace Time_Meetings_JW.Services
             Third = 0x942926
         }
 
-        public async Task GetContentMeeting()
+        public async Task GetContentMeetingMidweek()
         {
             string link = await GetLinkActualMeeting();
             HtmlDocument doc = await GetHtmlMeeting(link);
@@ -25,10 +25,13 @@ namespace Time_Meetings_JW.Services
             SetActualWeek(doc);
         }
 
-        public void GetContentMeetingWeekend()
+        public async Task GetContentMeetingWeekend()
         {
-            SetPart(-1, "Discurso Público", 30, Colors.Zero);
-            SetPart(99, "Estudo de A Sentinela", 60, Colors.Zero);
+            string link = await GetLinkActualMeeting();
+            HtmlDocument doc = await GetHtmlMeeting(link);
+            SetActualWeek(doc);
+            SetPart(100, "Discurso Público", 30, Colors.Zero);
+            SetPart(101, "Estudo de A Sentinela", 60, Colors.Zero);
         }
 
         public void SetActualWeek(HtmlDocument doc)

@@ -15,5 +15,9 @@
         Title="Reunião de Fim de Semana"
         ContentTemplate="{DataTemplate local:WeekendPage}"
         Route="WeekendPage" />
+    <ShellContent
+        Title="Configurações"
+        ContentTemplate="{DataTemplate local:ConfigurationsPage}"
+        Route="ConfigurationsPage" />
 
 </Shell>

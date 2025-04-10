@@ -2,13 +2,14 @@
 using Time_Meetings_JW.Entities;
 using Time_Meetings_JW.Services;
 using Time_Meetings_JW.Enums;
+using Time_Meetings_JW.Utils;
 
 namespace Time_Meetings_JW
 {
     public partial class WeekendPage : ContentPage
     {
         public ObservableCollection<Part> Parts { get; set; } = new();
-        private Services.Timer currentTimer { get; set; } = null;
+        public Services.Timer currentTimer { get; set; } = null;
 
         public WeekendPage()
         {
@@ -17,17 +18,26 @@ namespace Time_Meetings_JW
             _ = GetPartsWeekend();
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            if (Preferences.Get("parts_weekend", "") == "")
+            {
+                _ = GetPartsWeekend();
+            }
+        }
+
         private async Task GetPartsWeekend()
         {
             try
             {
+                ManageParts.SetPartsByStorage(labelWeek, Parts, EMeetingType.Weekend);
+
                 Meeting meeting = new();
-                meeting.GetContentMeetingWeekend();
-                Parts.Clear();
-                foreach(Part part in meeting.GetParts())
-                {
-                    Parts.Add(part);
-                }
+                await meeting.GetContentMeetingWeekend();
+
+                ManageParts.ComparePartsStorageWithActual(labelWeek, meeting, Parts, EMeetingType.Weekend);
             }
             catch (Exception ex)
             {
@@ -40,55 +50,7 @@ namespace Time_Meetings_JW
         {
             if (sender is Button button && button.CommandParameter is int number)
             {
-                SetEnableAllParts();
-                int index = GetIndexPartByNumber(number);
-                var part = Parts[index];
-
-                part.Status = part.Status switch
-                {
-                    EStatus.NotStarted => EStatus.Started,
-                    EStatus.Started => part.TimeUsed > part.Time ? EStatus.Delayed : EStatus.Finished,
-                    _ => EStatus.NotStarted
-                };
-
-                if (currentTimer == null)
-                    currentTimer = new Services.Timer(part);
-
-                if (part.Status == EStatus.Started)
-                {
-                    SetDisableOthersParts(index);
-                    currentTimer.StartTimer();
-                }
-                else if (currentTimer != null && part.Status == EStatus.Finished || part.Status == EStatus.Delayed)
-                {
-                    currentTimer.StopTimer();
-                    currentTimer = null;
-                    part.TimeUsedDesc = part.TimeUsed;
-                }
-            }
-        }
-
-        private int GetIndexPartByNumber(int number)
-        {
-            return Parts.ToList().FindIndex(p => p.Number == number);
-        }
-
-        private void SetEnableAllParts()
-        {
-            for (int i = 0; i < Parts.Count; i++)
-            {
-                Parts[i].Enabled = true;
-            }
-        }
-
-        private void SetDisableOthersParts(int index)
-        {
-            for (int i = 0; i < Parts.Count; i++)
-            {
-                if (i != index)
-                {
-                    Parts[i].Enabled = false;
-                }
+                ManageParts.ToggleTimer(Parts, number, currentTimer);
             }
         }
     }
