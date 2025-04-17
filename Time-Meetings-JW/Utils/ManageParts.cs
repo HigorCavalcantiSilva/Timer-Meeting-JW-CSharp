@@ -8,6 +8,8 @@ namespace Time_Meetings_JW.Utils
 {
     public class ManageParts
     {
+        public static Services.Timer _currentTimer;
+
         private static void SetPartsByArray(ObservableCollection<Part> Parts, ObservableCollection<Part> partsGetted)
         {
             Parts.Clear();
@@ -70,8 +72,9 @@ namespace Time_Meetings_JW.Utils
                 Preferences.Set("parts_midweek", JsonSerializer.Serialize(Parts));
         }
 
-        public static async void ToggleTimer(ObservableCollection<Part> Parts, int number, Services.Timer currentTimer)
+        public static async Task<Services.Timer> ToggleTimer(Page page, ObservableCollection<Part> Parts, int number, Services.Timer currentTimer)
         {
+            _currentTimer = currentTimer;
             SetEnableAllParts(Parts);
             int index = GetIndexPartByNumber(Parts, number);
             var part = Parts[index];
@@ -80,7 +83,6 @@ namespace Time_Meetings_JW.Utils
 
             if (part.Status == EStatus.Finished || part.Status == EStatus.Delayed)
             {
-                Page page = new Page();
                 Task<bool> restart = page.DisplayAlert("Atenção", "Deseja CONTINUAR ou ZERAR esta marcação?", "Continuar", "Zerar");
 
                 part.Status = EStatus.NotStarted;
@@ -93,7 +95,7 @@ namespace Time_Meetings_JW.Utils
             }
 
             if (!toStart)
-                return;
+                return _currentTimer;
 
             part.Status = part.Status switch
             {
@@ -103,21 +105,24 @@ namespace Time_Meetings_JW.Utils
                 _ => EStatus.NotStarted
             };
 
-            if (currentTimer == null)
-                currentTimer = new Services.Timer(part);
+            if (_currentTimer == null)
+                _currentTimer = new Services.Timer(part);
 
             if (part.Status == EStatus.Started)
             {
                 SetDisableOthersParts(Parts, index);
                 part.TimeUsedDesc = (part.Time ?? 0) - part.TimeUsed;
-                currentTimer.StartTimer(Parts);
+                _currentTimer.StopTimer();
+                _currentTimer.StartTimer(Parts);
             }
-            else if (currentTimer != null && part.Status == EStatus.Finished || part.Status == EStatus.Delayed)
+            else if (_currentTimer != null && part.Status == EStatus.Finished || part.Status == EStatus.Delayed)
             {
-                currentTimer.StopTimer();
-                currentTimer = null;
+                _currentTimer.StopTimer();
+                _currentTimer = null;
                 part.TimeUsedDesc = part.TimeUsed;
             }
+
+            return _currentTimer;
         }
 
         private static int GetIndexPartByNumber(ObservableCollection<Part> Parts, int number)

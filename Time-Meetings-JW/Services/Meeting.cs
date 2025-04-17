@@ -112,7 +112,7 @@ namespace Time_Meetings_JW.Services
             time = time * 60;
             Parts.Add(new Part
             {
-                Name = name,
+                Name = name + (time > 0 ? $" ({time / 60} min)" : ""),
                 Time = time,
                 TimeUsedDesc = time,
                 Number = number,

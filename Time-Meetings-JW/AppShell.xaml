@@ -7,17 +7,16 @@
     Shell.FlyoutBehavior="Flyout"
     Title="Time_Meetings_JW">
 
-    <ShellContent
-        Title="Reunião de Meio de Semana"
-        ContentTemplate="{DataTemplate local:MidweekPage}"
-        Route="MidweekPage" />
-    <ShellContent
-        Title="Reunião de Fim de Semana"
-        ContentTemplate="{DataTemplate local:WeekendPage}"
-        Route="WeekendPage" />
-    <ShellContent
-        Title="Configurações"
-        ContentTemplate="{DataTemplate local:ConfigurationsPage}"
-        Route="ConfigurationsPage" />
+    <FlyoutItem Title="Reunião de Meio de Semana" Route="MidweekPage">
+        <ShellContent ContentTemplate="{DataTemplate local:MidweekPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Reunião de Fim de Semana" Route="WeekendPage">
+        <ShellContent ContentTemplate="{DataTemplate local:WeekendPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Configurações" Route="ConfigurationsPage">
+        <ShellContent ContentTemplate="{DataTemplate local:ConfigurationsPage}" />
+    </FlyoutItem>
 
 </Shell>

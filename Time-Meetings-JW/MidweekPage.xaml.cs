@@ -18,14 +18,11 @@ namespace Time_Meetings_JW
             _ = GetPartsWeek();
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            if(Preferences.Get("parts_midweek", "") == "")
-            {
-                _ = GetPartsWeek();
-            }
+            await GetPartsWeek();
         }
 
         private async Task GetPartsWeek()
@@ -50,7 +47,7 @@ namespace Time_Meetings_JW
         {
             if (sender is Button button && button.CommandParameter is int number)
             {
-                ManageParts.ToggleTimer(Parts, number, currentTimer);
+                currentTimer = await ManageParts.ToggleTimer(this, Parts, number, currentTimer);
             }
         }
     }

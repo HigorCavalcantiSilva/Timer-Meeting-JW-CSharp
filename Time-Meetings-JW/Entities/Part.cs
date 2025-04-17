@@ -79,6 +79,6 @@ namespace Time_Meetings_JW.Entities
                 _ => Colors.Gray.ToHex()
             };
         public string? FormattedTimeUsed =>
-            TimeSpan.FromSeconds(TimeUsedDesc).ToString(@"mm\:ss");
+             $"{(int)TimeSpan.FromSeconds(TimeUsedDesc).TotalMinutes:D2}:{TimeSpan.FromSeconds(TimeUsedDesc).Seconds:D2}";
     }
 }

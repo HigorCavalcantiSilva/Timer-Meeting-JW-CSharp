@@ -1,4 +1,6 @@
-﻿namespace Time_Meetings_JW
+﻿using Time_Meetings_JW.Utils;
+
+namespace Time_Meetings_JW
 {
     public partial class ConfigurationsPage : ContentPage
     {
@@ -17,21 +19,36 @@
                 {
                     confirm = DisplayAlert("Atenção", "Deseja limpar informações da REUNIÃO DO MEIO DE SEMANA?", "Sim", "Não");
                     if(await confirm)
+                    {
+                        StopTimerActual();
                         Preferences.Remove("parts_midweek");
+                    }
                 }
                 else if (number == 2)
                 {
                     confirm = DisplayAlert("Atenção", "Deseja limpar informações da REUNIÃO DO FIM DE SEMANA?", "Sim", "Não");
                     if (await confirm)
+                    {
+                        StopTimerActual();
                         Preferences.Remove("parts_weekend");
+                    }
                 }
                 else if (number == 3)
                 {
                     confirm = DisplayAlert("Atenção", "Deseja limpar informações de TODAS AS REUNIÕES?", "Sim", "Não");
                     if (await confirm)
+                    {
+                        StopTimerActual();
                         Preferences.Clear();
+                    }
                 }
             }
+        }
+
+        private void StopTimerActual()
+        {
+            if (ManageParts._currentTimer != null)
+                ManageParts._currentTimer.StopTimer();
         }
     }
 }

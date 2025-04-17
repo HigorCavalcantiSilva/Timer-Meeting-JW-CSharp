@@ -29,7 +29,7 @@ namespace Time_Meetings_JW.Services
                     if (currentPart.TimeUsedDesc < 0)
                         currentPart.Status = EStatus.OutTime;
 
-                    if (currentPart.TimeUsedDesc <= 30 && currentPart.TimeUsedDesc >= 0)
+                    if (currentPart.TimeUsed > currentPart.Time - 30 && currentPart.TimeUsedDesc <= 30 && currentPart.TimeUsedDesc >= 0)
                         currentPart.Status = EStatus.Ending;
 
                     ManageParts.SaveParts(Parts);
