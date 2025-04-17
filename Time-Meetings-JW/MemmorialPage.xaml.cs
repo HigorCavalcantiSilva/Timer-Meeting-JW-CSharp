@@ -6,36 +6,35 @@ using Time_Meetings_JW.Utils;
 
 namespace Time_Meetings_JW
 {
-    public partial class MidweekPage : ContentPage
+    public partial class MemmorialPage : ContentPage
     {
         public ObservableCollection<Part> Parts { get; set; } = new();
         public Services.Timer currentTimer { get; set; } = null;
 
-        public MidweekPage()
+        public MemmorialPage()
         {
             InitializeComponent();
             BindingContext = this;
+            _ = GetPartsMemmorial();
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            IsBusy = true;
-            await GetPartsWeek();
-            IsBusy = false;
+            await GetPartsMemmorial();
         }
 
-        private async Task GetPartsWeek()
+        private async Task GetPartsMemmorial()
         {
             try
             {
-                ManageParts.SetPartsByStorage(labelWeek, Parts, EMeetingType.Midweek);
+                ManageParts.SetPartsByStorage(null, Parts, EMeetingType.Memmorial);
 
                 Meeting meeting = new();
-                await meeting.GetContentMeetingMidweek(this);
+                meeting.GetContentMeetingMemmorial();
 
-                ManageParts.ComparePartsStorageWithActual(labelWeek, meeting, Parts, EMeetingType.Midweek);
+                ManageParts.ComparePartsStorageWithActual(null, meeting, Parts, EMeetingType.Memmorial);
             }
             catch (Exception ex)
             {

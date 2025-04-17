@@ -5,7 +5,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Time_Meetings_JW"
     Shell.FlyoutBehavior="Flyout"
-    Title="Time_Meetings_JW">
+    Title="JW Timer Mobile">
+    <Shell.FlyoutHeader>
+        <Grid Padding="10">
+            <Label Text="JW Timer Mobile" 
+                   FontSize="24" 
+                   HorizontalOptions="Center" 
+                   VerticalOptions="Center"
+                   TextColor="DarkGray"/>
+        </Grid>
+    </Shell.FlyoutHeader>
 
     <FlyoutItem Title="Reunião de Meio de Semana" Route="MidweekPage">
         <ShellContent ContentTemplate="{DataTemplate local:MidweekPage}" />
@@ -13,6 +22,10 @@
 
     <FlyoutItem Title="Reunião de Fim de Semana" Route="WeekendPage">
         <ShellContent ContentTemplate="{DataTemplate local:WeekendPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem IsVisible="{Binding showMemmorial}" IsEnabled="{Binding showMemmorial}" Title="Celebração" Route="MemmorialPage">
+        <ShellContent ContentTemplate="{DataTemplate local:MemmorialPage}" />
     </FlyoutItem>
 
     <FlyoutItem Title="Configurações" Route="ConfigurationsPage">

@@ -6,6 +6,7 @@
         {
             InitializeComponent();
             UserAppTheme = AppTheme.Dark;
+            Preferences.Set("is_visit_circuit", false);
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

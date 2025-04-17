@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using System.Collections.ObjectModel;
+using System.Net;
 using Time_Meetings_JW.Entities;
 
 namespace Time_Meetings_JW.Services
@@ -17,21 +18,40 @@ namespace Time_Meetings_JW.Services
             Third = 0x942926
         }
 
-        public async Task GetContentMeetingMidweek()
+        public async Task GetContentMeetingMidweek(Page page)
         {
+            if (!await VerifyInternetConnection(page))
+                return;
+
             string link = await GetLinkActualMeeting();
             HtmlDocument doc = await GetHtmlMeeting(link);
-            SetSectionsAtMeeting(doc);
             SetActualWeek(doc);
+
+            if (actual_week == Preferences.Get("labelWeek", "") && Preferences.Get("parts_midweek", "") != "")
+                return;
+
+            SetSectionsAtMeeting(doc);
         }
 
-        public async Task GetContentMeetingWeekend()
+        public async Task GetContentMeetingWeekend(Page page)
         {
+            if (!await VerifyInternetConnection(page))
+                return;
+
             string link = await GetLinkActualMeeting();
             HtmlDocument doc = await GetHtmlMeeting(link);
             SetActualWeek(doc);
+
+            if (actual_week == Preferences.Get("labelWeek", "") && Preferences.Get("parts_weekend", "") != "")
+                return;
+
             SetPart(100, "Discurso Público", 30, Colors.Zero);
             SetPart(101, "Estudo de A Sentinela", 60, Colors.Zero);
+        }
+
+        public void GetContentMeetingMemmorial()
+        {
+            SetPart(102, "Discurso da Celebração", 45, Colors.Zero);
         }
 
         public void SetActualWeek(HtmlDocument doc)
@@ -162,6 +182,17 @@ namespace Time_Meetings_JW.Services
 
         public ObservableCollection<Part> GetParts() {
             return Parts;
+        }
+
+        public async Task<bool> VerifyInternetConnection(Page page)
+        {
+            var entry = await Dns.GetHostEntryAsync("www.google.com");
+            if (entry.AddressList.Length == 0)
+            {
+                page.DisplayAlert("ERRO", "Sem conexão com a internet para baixar reunião semanal", "Fechar");
+                return false;
+            }
+            return true;
         }
     }
 }

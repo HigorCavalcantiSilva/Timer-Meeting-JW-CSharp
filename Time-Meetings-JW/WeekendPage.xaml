@@ -3,47 +3,65 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Time_Meetings_JW.WeekendPage">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <Label
-                x:Name="labelWeek"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout
+                Padding="30,0"
+                Spacing="25">
+                <Label
+                    x:Name="labelWeek"
+                    Style="{StaticResource Headline}"
+                    SemanticProperties.HeadingLevel="Level1" />
 
-            <CollectionView ItemsSource="{Binding Parts}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Orientation="Horizontal" Padding="10">
-                            <Label 
-                                Text="{Binding Name}"
-                                FontSize="15"
-                                Padding="10"
-                                TextColor="{Binding ColorText}"
-                                HorizontalOptions="FillAndExpand"
-                                BackgroundColor="{Binding BackgroundTitleParts}"
-                                FontAttributes="{Binding FontWeight}" />
-                            
-                            <Button 
-                                Text="{Binding FormattedTimeUsed}" 
-                                IsVisible="True"
-                                BackgroundColor="{Binding ColorButton}"
-                                Clicked="ToggleTimerClicked"
-                                CommandParameter="{Binding Number}"
-                                IsEnabled="{Binding Enabled}"
-                                >
-                                <Button.Triggers>
-                                    <DataTrigger TargetType="Button" Binding="{Binding Time}" Value="0">
-                                        <Setter Property="IsVisible" Value="False" />
-                                    </DataTrigger>
-                                </Button.Triggers>
-                            </Button>
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </VerticalStackLayout>
-    </ScrollView>
+                <CollectionView ItemsSource="{Binding Parts}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+                                <Label 
+                                    Text="{Binding Name}"
+                                    FontSize="15"
+                                    Padding="10"
+                                    TextColor="{Binding ColorText}"
+                                    HorizontalOptions="FillAndExpand"
+                                    BackgroundColor="{Binding BackgroundTitleParts}"
+                                    FontAttributes="{Binding FontWeight}" />
 
+                                <Button 
+                                    Text="{Binding FormattedTimeUsed}" 
+                                    IsVisible="True"
+                                    BackgroundColor="{Binding ColorButton}"
+                                    TextColor="White"
+                                    Clicked="ToggleTimerClicked"
+                                    CommandParameter="{Binding Number}"
+                                    IsEnabled="{Binding Enabled}"
+                                    >
+                                    <Button.Triggers>
+                                        <DataTrigger TargetType="Button" Binding="{Binding Time}" Value="0">
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid IsVisible="{Binding IsBusy}">
+            <!-- Fundo escuro -->
+            <BoxView BackgroundColor="#80000000" 
+                 VerticalOptions="FillAndExpand" 
+                 HorizontalOptions="FillAndExpand" />
+
+            <!-- Indicador de progresso -->
+            <ActivityIndicator 
+            IsRunning="True"
+            Color="White"
+            WidthRequest="50"
+            HeightRequest="50"
+            VerticalOptions="Center"
+            HorizontalOptions="Center" />
+        </Grid>
+    </Grid>
 </ContentPage>

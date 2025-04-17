@@ -3,6 +3,7 @@
     public enum EMeetingType
     {
         Midweek = 1,
-        Weekend = 2
+        Weekend = 2,
+        Memmorial = 3
     }
 }

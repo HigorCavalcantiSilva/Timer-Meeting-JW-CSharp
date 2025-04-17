@@ -15,14 +15,15 @@ namespace Time_Meetings_JW
         {
             InitializeComponent();
             BindingContext = this;
-            _ = GetPartsWeekend();
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
 
+            IsBusy = true;
             await GetPartsWeekend();
+            IsBusy = false;
         }
 
         private async Task GetPartsWeekend()
@@ -32,7 +33,7 @@ namespace Time_Meetings_JW
                 ManageParts.SetPartsByStorage(labelWeek, Parts, EMeetingType.Weekend);
 
                 Meeting meeting = new();
-                await meeting.GetContentMeetingWeekend();
+                await meeting.GetContentMeetingWeekend(this);
 
                 ManageParts.ComparePartsStorageWithActual(labelWeek, meeting, Parts, EMeetingType.Weekend);
             }

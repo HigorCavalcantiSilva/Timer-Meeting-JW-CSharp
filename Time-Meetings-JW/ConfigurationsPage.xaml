@@ -4,7 +4,22 @@
              x:Class="Time_Meetings_JW.ConfigurationsPage">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15" VerticalOptions="Center">
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label
+                Text="Configurações"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <HorizontalStackLayout>
+                <Switch x:Name="switchMemmorial" IsToggled="False" Toggled="OnSwitchMemmorialToggled" />
+                <Label Text="Reunião de Celebração" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout>
+                <Switch x:Name="switchVisitCircuit" IsToggled="False" Toggled="OnSwitchVisitCircuitToggled" />
+                <Label Text="Visita do Superintendente" VerticalOptions="Center" />
+            </HorizontalStackLayout>
 
             <Button Text="Limpar Dados - Reunião Meio de Semana"
                 Clicked="DeleteInfosClicked"

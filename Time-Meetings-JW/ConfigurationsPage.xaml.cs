@@ -8,6 +8,30 @@ namespace Time_Meetings_JW
         {
             InitializeComponent();
             BindingContext = this;
+
+            switchMemmorial.IsToggled = Preferences.Get("is_memmorial", false);
+            switchVisitCircuit.IsToggled = Preferences.Get("is_visit_circuit", false);
+        }
+
+        private void OnSwitchMemmorialToggled(object sender, ToggledEventArgs e)
+        {
+            Preferences.Set("is_memmorial", e.Value);
+            if (e.Value == false)
+                Preferences.Remove("memmorial");
+        }
+
+        private void OnSwitchVisitCircuitToggled(object sender, ToggledEventArgs e)
+        {
+            Preferences.Set("is_visit_circuit", e.Value);
+
+            if (e.Value == true)
+            {
+                ManageParts.SetPartsVisit();
+            }
+            else
+            {
+                ManageParts.RemovePartsVisit();
+            }
         }
 
         private async void DeleteInfosClicked(object sender, EventArgs e)
@@ -39,6 +63,8 @@ namespace Time_Meetings_JW
                     if (await confirm)
                     {
                         StopTimerActual();
+                        switchMemmorial.IsToggled = false;
+                        switchVisitCircuit.IsToggled = false;
                         Preferences.Clear();
                     }
                 }

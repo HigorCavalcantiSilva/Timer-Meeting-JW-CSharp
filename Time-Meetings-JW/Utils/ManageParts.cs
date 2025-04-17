@@ -13,6 +13,7 @@ namespace Time_Meetings_JW.Utils
         private static void SetPartsByArray(ObservableCollection<Part> Parts, ObservableCollection<Part> partsGetted)
         {
             Parts.Clear();
+            
             foreach (Part part in partsGetted)
             {
                 part.Enabled = true;
@@ -30,13 +31,25 @@ namespace Time_Meetings_JW.Utils
 
         public static void SetPartsByStorage(Label label, ObservableCollection<Part> Parts, EMeetingType meetingType)
         {
-            string labelWeek = Preferences.Get("labelWeek", "");
-            label.Text = labelWeek;
-
-            string partsSerialized = meetingType == EMeetingType.Midweek ? Preferences.Get("parts_midweek", "") : Preferences.Get("parts_weekend", "");
-            if (!string.IsNullOrEmpty(partsSerialized))
+            if (label != null)
             {
-                ObservableCollection<Part> partsDeserialized = JsonSerializer.Deserialize<ObservableCollection<Part>>(partsSerialized);
+                string labelWeek = Preferences.Get("labelWeek", "");
+                label.Text = labelWeek;
+            }
+
+            string key = meetingType switch
+            {
+                EMeetingType.Midweek => "parts_midweek",
+                EMeetingType.Weekend => "parts_weekend",
+                EMeetingType.Memmorial => "memmorial",
+                _ => ""
+            };
+
+
+            ObservableCollection<Part> partsDeserialized = GetPartsDeserialized(key);
+            
+            if (partsDeserialized != null)
+            {
                 SetPartsByArray(Parts, partsDeserialized);
             }
             else
@@ -47,29 +60,40 @@ namespace Time_Meetings_JW.Utils
 
         public static void ComparePartsStorageWithActual(Label label, Meeting meeting, ObservableCollection<Part> Parts, EMeetingType meetingType)
         {
-            string dateMeeting = label.Text;
-            if (meeting.GetWeek() != "" && meeting.GetWeek() != dateMeeting)
+            if (label != null)
             {
-                dateMeeting = meeting.GetWeek();
-                Preferences.Set("labelWeek", dateMeeting);
+                string dateMeeting = label.Text;
+                if (meeting.GetWeek() != "" && meeting.GetWeek() != dateMeeting)
+                {
+                    dateMeeting = meeting.GetWeek();
+                    Preferences.Set("labelWeek", dateMeeting);
 
-                SetPartsByArray(Parts, meeting.GetParts());
-                SaveParts(Parts);
+                    SetPartsByArray(Parts, meeting.GetParts());
+                    SaveParts(Parts);
+                }
+                else if (meeting.GetParts().Count > 0)
+                {
+                    {
+                        SetPartsByArray(Parts, meeting.GetParts());
+                    }
+
+                    label.Text = dateMeeting ?? meeting.GetWeek();
+                }
             }
-            else if (Parts.Count == 0)
+            else
             {
                 SetPartsByArray(Parts, meeting.GetParts());
             }
-
-            label.Text = dateMeeting ?? meeting.GetWeek();
         }
 
         public static void SaveParts(ObservableCollection<Part> Parts)
         {
             if (Parts[0].Number == 100)
                 Preferences.Set("parts_weekend", JsonSerializer.Serialize(Parts));
-            else
+            else if (Parts[0].Number <= 101)
                 Preferences.Set("parts_midweek", JsonSerializer.Serialize(Parts));
+            else if (Parts[0].Number == 102)
+                Preferences.Set("memmorial", JsonSerializer.Serialize(Parts));
         }
 
         public static async Task<Services.Timer> ToggleTimer(Page page, ObservableCollection<Part> Parts, int number, Services.Timer currentTimer)
@@ -147,6 +171,83 @@ namespace Time_Meetings_JW.Utils
                     Parts[i].Enabled = false;
                 }
             }
+        }
+
+        #region [Visita do Superintendente de Circuito]
+        public static void SetPartsVisit()
+        {
+            SetPartsVisitMidweek();
+            SetPartsVisitWeekend();
+        }
+
+        private static void SetPartsVisitMidweek()
+        {
+            ObservableCollection<Part> partsDeserialized = GetPartsDeserialized("parts_midweek");
+            if (partsDeserialized != null)
+            {
+                partsDeserialized[partsDeserialized.Count - 2].Name = "Discurso de Serviço - Visita";
+                SaveParts(partsDeserialized);
+            }
+        }
+
+        private static void SetPartsVisitWeekend()
+        {
+            ObservableCollection<Part> partsDeserialized = GetPartsDeserialized("parts_weekend");
+            if (partsDeserialized != null)
+            {
+                partsDeserialized[partsDeserialized.Count - 1].Time = 30 * 60;
+                partsDeserialized.Add(new Part
+                {
+                    Name = "Discurso Final - Visita",
+                    Time = 30 * 60,
+                    Status = EStatus.NotStarted
+                });
+                SaveParts(partsDeserialized);
+            }
+        }
+
+        public static void RemovePartsVisit()
+        {
+            RemovePartsVisitMidweek();
+            RemovePartsVisitWeekend();
+        }
+
+        private static void RemovePartsVisitMidweek()
+        {
+            ObservableCollection<Part> partsDeserialized = GetPartsDeserialized("parts_midweek");
+            
+            if (partsDeserialized != null)
+            {
+                partsDeserialized[partsDeserialized.Count - 2].Name = "Estudo bíblico de congregação (30 min)";
+                SaveParts(partsDeserialized);
+            }
+        }
+
+        private static void RemovePartsVisitWeekend()
+        {
+            ObservableCollection<Part> partsDeserialized = GetPartsDeserialized("parts_weekend");
+
+            if (partsDeserialized != null)
+            {
+                partsDeserialized.RemoveAt(partsDeserialized.Count - 1);
+                partsDeserialized[partsDeserialized.Count - 1].Time = 60 * 60;
+                SaveParts(partsDeserialized);
+            }
+        }
+
+        #endregion
+
+        private static ObservableCollection<Part> GetPartsDeserialized(string nameStore)
+        {
+            string partsSerialized = Preferences.Get(nameStore, "");
+
+            if (!string.IsNullOrEmpty(partsSerialized))
+            {
+                ObservableCollection<Part> partsDeserialized = JsonSerializer.Deserialize<ObservableCollection<Part>>(partsSerialized);
+                return partsDeserialized;
+            }
+
+            return null;
         }
     }
 }
