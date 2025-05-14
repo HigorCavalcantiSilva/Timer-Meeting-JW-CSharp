@@ -17,6 +17,13 @@ namespace Time_Meetings_JW.Services
             Second = 0xD68F00,
             Third = 0x942926
         }
+        private List<List<string>> classesTitles = new List<List<string>>()
+        {
+            new List<string> { "du-fontSize--base", "du-margin-top--8", "du-margin-bottom--0" },
+            new List<string> { "du-fontSize--base", "du-margin-vertical--0" }
+        };
+
+        private List<string> classes_actual_date = new List<string> { "du-fontSize--basePlus2", "du-color--textSubdued" };
 
         public async Task GetContentMeetingMidweek(Page page)
         {
@@ -26,6 +33,8 @@ namespace Time_Meetings_JW.Services
             string link = await GetLinkActualMeeting();
             HtmlDocument doc = await GetHtmlMeeting(link);
             SetActualWeek(doc);
+
+            var a = Preferences.Get("parts_midweek", "");
 
             if (actual_week == Preferences.Get("labelWeek", "") && Preferences.Get("parts_midweek", "") != "")
                 return;
@@ -56,7 +65,15 @@ namespace Time_Meetings_JW.Services
 
         public void SetActualWeek(HtmlDocument doc)
         {
-            actual_week = doc.DocumentNode.SelectSingleNode("//*[@id='p1']").InnerText;
+            actual_week = doc.DocumentNode.Descendants().Where(n =>
+            n.Attributes["class"] != null
+            && n.Attributes["class"]
+            .Value
+            .Split(" ")
+            .ToHashSet()
+            .IsSupersetOf(classes_actual_date))
+            .ToList()[0]
+            .InnerText;
         }
 
         public string GetWeek()
@@ -145,9 +162,14 @@ namespace Time_Meetings_JW.Services
             return Convert.ToInt32(timeUnformatted.Split('(')[1].Split(' ')[0]);
         }
 
-        private void SetPartByClass(string className, HtmlDocument doc, Colors color)
+        private void SetPartByClass(string classMain, List<List<string>> classNames, HtmlDocument doc, Colors color)
         {
-            var list_parts = doc.DocumentNode.SelectNodes($"//*[contains(@class, '{className}')]");
+            var list_parts = doc.DocumentNode.Descendants()
+            .Where(n => n.Attributes["class"] != null
+                && n.Attributes["class"].Value.Contains(classMain)
+                && (n.Attributes["class"].Value.Split(' ').ToHashSet().IsSupersetOf(classNames[0])
+                || n.Attributes["class"].Value.Split(' ').ToHashSet().IsSupersetOf(classNames[1]))
+            );
 
             int idx = 0;
             foreach (var item in list_parts)
@@ -167,17 +189,29 @@ namespace Time_Meetings_JW.Services
 
         private void SetTreasures(HtmlDocument doc)
         {
-            SetPartByClass("du-color--teal-700", doc, Colors.First);
+            SetPartByClass("du-color--teal-700",
+                classesTitles,
+                doc,
+                Colors.First
+            );
         }
 
         private void SetDoYourBestInMinistry(HtmlDocument doc)
         {
-            SetPartByClass("du-color--gold-700", doc, Colors.Second);
+            SetPartByClass("du-color--gold-700",
+                classesTitles,
+                doc,
+                Colors.Second
+            );
         }
 
         private void SetOurChristianLife(HtmlDocument doc)
         {
-            SetPartByClass("du-color--maroon-600", doc, Colors.Third);
+            SetPartByClass("du-color--maroon-600",
+                classesTitles,
+                doc,
+                Colors.Third
+            );
         }
 
         public ObservableCollection<Part> GetParts() {
